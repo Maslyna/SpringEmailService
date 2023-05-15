@@ -24,10 +24,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(c -> c
                 .requestMatchers(antMatcher("/h2/**")).permitAll()
-                .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/register")).permitAll()
                 .anyRequest().permitAll());
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.httpBasic();
+        http.csrf().disable();
         http.headers().frameOptions().disable();
         return http.build();
     }
