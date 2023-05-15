@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Validated
 @RestController
@@ -29,9 +30,19 @@ public class UserController {
         userService.deleteUser(id, authentication);
     }
 
-    @PostMapping("/{user-id}/send-email")
+    @PostMapping("/send-email")
     @PreAuthorize("hasRole('USER')")
-    void sendEmail(@RequestBody SimpleEmailDTO simpleEmailDTO) {
+    void sendEmail(@RequestBody SimpleEmailDTO simpleEmailDTO, Authentication authentication) {
         emailService.sendEmail(simpleEmailDTO.to(), simpleEmailDTO.subject(), simpleEmailDTO.text());
+    }
+
+    @PostMapping("/send-file")
+    @PreAuthorize("hasRole('USER')")
+    void sendFileByEmail(@RequestParam("to") String to,
+                         @RequestParam("subject") String subject,
+                         @RequestParam("text") String text,
+                         @RequestParam("file") MultipartFile file,
+                         Authentication authentication) {
+        emailService.sendFileByEmail(to, subject, text, file);
     }
 }
