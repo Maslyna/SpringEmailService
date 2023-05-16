@@ -1,5 +1,6 @@
 package com.maslyna.springemailservice.service.impl;
 
+import com.maslyna.springemailservice.config.EmailConfig;
 import com.maslyna.springemailservice.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -24,11 +25,12 @@ import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
 @Slf4j
 public class EmailServiceImpl implements EmailService {
     private JavaMailSender javaMailSender;
+    private EmailConfig emailConfig;
 
     @Override
     public void sendEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@baeldung.com");
+        message.setFrom(emailConfig.getDefaultEmail());
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
@@ -42,7 +44,7 @@ public class EmailServiceImpl implements EmailService {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setFrom("sanci324@gmail.com");
+            helper.setFrom(emailConfig.getDefaultEmail());
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(text);
@@ -55,6 +57,22 @@ public class EmailServiceImpl implements EmailService {
             throw new ResponseStatusException(NOT_IMPLEMENTED, "message is not sent");
         }
     }
+
+    public void sendHTMLEmail(String to, String subject, String text) {
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(emailConfig.getDefaultEmail());
+            helper.setTo(to);
+            helper.setSubject(subject);
+            message.setText(text);
+
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private File convertMultiPartToFile(MultipartFile file)
             throws IOException {

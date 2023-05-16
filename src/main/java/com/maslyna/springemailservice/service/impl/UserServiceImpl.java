@@ -1,8 +1,11 @@
 package com.maslyna.springemailservice.service.impl;
 
+import com.maslyna.springemailservice.config.EmailConfig;
+import com.maslyna.springemailservice.config.ServerInfoConfig;
 import com.maslyna.springemailservice.model.UserRegistrationDTO;
 import com.maslyna.springemailservice.model.entity.DeletedUser;
 import com.maslyna.springemailservice.model.entity.UserEntity;
+import com.maslyna.springemailservice.props.EmailDefaultProps;
 import com.maslyna.springemailservice.repo.DeletedUsersRepository;
 import com.maslyna.springemailservice.repo.UserEntityRepository;
 import com.maslyna.springemailservice.service.EmailService;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -28,6 +33,9 @@ import static org.springframework.http.HttpStatus.*;
 @Slf4j
 @Transactional
 public class UserServiceImpl implements UserService {
+    private ServerInfoConfig serverInfoConfig;
+    private EmailConfig emailConfig;
+    private EmailDefaultProps emailDefaultProps;
     private EmailService emailService;
     private UserEntityRepository userEntityRepository;
     private PasswordEncoder passwordEncoder;
@@ -60,6 +68,14 @@ public class UserServiceImpl implements UserService {
                 .build();
         deletedUsersRepository.save(deletedUser);
         userEntityRepository.save(user);
+
+        String userActivateAccountLink = serverInfoConfig.getFullServerAddress() + "/activate?uuid=" + user.getUuid();
+        log.info("activate url = {}", userActivateAccountLink);
+
+        emailService.sendHTMLEmail(user.getLogin(),
+                    emailDefaultProps.userDeletedSubject(),
+                    emailDefaultProps.userDeleted().formatted(userActivateAccountLink));
+
     }
 
     public List<UserEntity> getAllUsers() {
