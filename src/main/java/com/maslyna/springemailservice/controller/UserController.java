@@ -48,7 +48,7 @@ public class UserController {
         emailService.sendFileByEmail(to, subject, text, file);
     }
 
-    @PostMapping("/activate/{uuid}")
+    @PostMapping("/activate")
     void activateAccount(@RequestParam("uuid") String uuid) {
         userService.activateAccount(uuid);
     }

@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .requestMatchers(antMatcher("/h2/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/register")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, "/get-all")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/activate")).permitAll()
                 .anyRequest().authenticated());
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.httpBasic();

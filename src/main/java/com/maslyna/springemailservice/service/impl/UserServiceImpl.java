@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.*;
 @Service
 @AllArgsConstructor
 @Slf4j
+@Transactional
 public class UserServiceImpl implements UserService {
     private EmailService emailService;
     private UserEntityRepository userEntityRepository;
@@ -68,7 +70,9 @@ public class UserServiceImpl implements UserService {
     public void activateAccount(String uuid) {
         UserEntity user = userEntityRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        user.setIsLocked(false);
         deletedUsersRepository.deleteByDeletedUser(user);
+        userEntityRepository.save(user);
     }
 
     public final Predicate<UserRegistrationDTO> isUserExist = user -> userEntityRepository.existsByLogin(user.login());
