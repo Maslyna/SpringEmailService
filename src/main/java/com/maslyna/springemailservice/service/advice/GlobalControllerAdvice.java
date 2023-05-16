@@ -25,7 +25,7 @@ public class GlobalControllerAdvice {
             UserEntity user = userEntityRepository.findByLogin(login)
                     .orElseThrow(() -> new ResponseStatusException(NOT_FOUND,
                             "User with login {%s} not found".formatted(login)));
-            if (user.getIsLocked()) {
+            if (Boolean.TRUE.equals(user.getIsLocked())) {
                 throw new ResponseStatusException(FORBIDDEN, "your account is blocked");
             }
         }

@@ -5,6 +5,7 @@ import com.maslyna.springemailservice.model.entity.DeletedUser;
 import com.maslyna.springemailservice.model.entity.UserEntity;
 import com.maslyna.springemailservice.repo.DeletedUsersRepository;
 import com.maslyna.springemailservice.repo.UserEntityRepository;
+import com.maslyna.springemailservice.service.EmailService;
 import com.maslyna.springemailservice.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
+    private EmailService emailService;
     private UserEntityRepository userEntityRepository;
     private PasswordEncoder passwordEncoder;
     private DeletedUsersRepository deletedUsersRepository;
@@ -60,6 +62,13 @@ public class UserServiceImpl implements UserService {
 
     public List<UserEntity> getAllUsers() {
         return userEntityRepository.findAll();
+    }
+
+    @Override
+    public void activateAccount(String uuid) {
+        UserEntity user = userEntityRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        deletedUsersRepository.deleteByDeletedUser(user);
     }
 
     public final Predicate<UserRegistrationDTO> isUserExist = user -> userEntityRepository.existsByLogin(user.login());

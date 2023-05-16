@@ -10,4 +10,6 @@ public interface UserService {
     UserEntity register(UserRegistrationDTO user);
     void deleteUser(Long id, Authentication authentication);
     List<UserEntity> getAllUsers();
+
+    void activateAccount(String uuid);
 }

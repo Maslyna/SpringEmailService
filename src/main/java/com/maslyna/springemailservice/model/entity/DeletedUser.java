@@ -20,7 +20,7 @@ public class DeletedUser {
 
     private Instant timeToDelete;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private UserEntity deletedUser;
 }

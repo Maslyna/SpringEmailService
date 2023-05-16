@@ -49,8 +49,8 @@ public class UserController {
     }
 
     @PostMapping("/activate/{uuid}")
-    void activateTheAccount() {
-
+    void activateAccount(@RequestParam("uuid") String uuid) {
+        userService.activateAccount(uuid);
     }
 
     @GetMapping("/get-all")

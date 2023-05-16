@@ -1,7 +1,6 @@
 package com.maslyna.springemailservice.config;
 
 import com.maslyna.springemailservice.mappers.UserEntityMapper;
-import com.maslyna.springemailservice.repo.DeletedUsersRepository;
 import com.maslyna.springemailservice.repo.UserEntityRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
@@ -48,7 +47,6 @@ public class SecurityConfig {
     @Bean
     UserDetailsService userDetailsService(
             UserEntityRepository userEntityRepository,
-            DeletedUsersRepository deletedUsersRepository,
             UserEntityMapper mapper
     ) {
         return login -> userEntityRepository.findByLogin(login)
