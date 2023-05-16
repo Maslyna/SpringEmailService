@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.*;
 
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
                 .login(user.login())
                 .password(passwordEncoder.encode(user.password()))
                 .uuid(uuid.toString())
+                .isLocked(false)
                 .authority("ROLE_USER")
                 .build();
         log.info("uuid = {}", uuid);
@@ -47,11 +49,17 @@ public class UserServiceImpl implements UserService {
         isValidUser.accept(authentication, id);
         UserEntity user = userEntityRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+        user.setIsLocked(true);
         DeletedUser deletedUser = DeletedUser.builder()
                 .deletedUser(user)
                 .timeToDelete(Instant.now().plus(3, ChronoUnit.DAYS))
                 .build();
         deletedUsersRepository.save(deletedUser);
+        userEntityRepository.save(user);
+    }
+
+    public List<UserEntity> getAllUsers() {
+        return userEntityRepository.findAll();
     }
 
     public final Predicate<UserRegistrationDTO> isUserExist = user -> userEntityRepository.existsByLogin(user.login());

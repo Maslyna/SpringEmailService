@@ -19,4 +19,5 @@ public class UserEntity {
     private String password;
     private String uuid;
     private String authority;
+    private Boolean isLocked;
 }
