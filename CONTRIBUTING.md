@@ -33,7 +33,7 @@ RESPONSE BODY:
 ###### P.S. In this service you also can send different emails to another peoples with `POST` request for `localhost:8080/send-email` endpoint with body:
 ```
 {
-    "to" : "sanci324@gmail.com",
+    "to" : "random.email@gmail.com",
     "subject" : "test email spring boot service sender",
     "text" : "hi, how are you doing? My name is John Doe."
 }
