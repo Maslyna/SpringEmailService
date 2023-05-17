@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
         String userActivateAccountLink = serverInfoConfig.getFullServerAddress() + "/activate?uuid=" + user.getUuid();
         log.info("activate url = {}", userActivateAccountLink);
 
-        emailService.sendHTMLEmail(user.getLogin(),
+        emailService.sendEmail(user.getLogin(),
                     emailDefaultProps.userDeletedSubject(),
                     emailDefaultProps.userDeleted().formatted(userActivateAccountLink));
 

@@ -65,7 +65,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setFrom(emailConfig.getDefaultEmail());
             helper.setTo(to);
             helper.setSubject(subject);
-            message.setText(text);
+            message.setContent(text, "text/html");
 
             javaMailSender.send(message);
         } catch (MessagingException e) {
