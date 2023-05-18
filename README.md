@@ -26,7 +26,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Running the Application:
 Now you can launch the server for example (default port is 8080):
 - `java -jar ./target/*.jar`
-- To see more information follow link: [CONTRIBUTING.md (click)](https://github.com/Maslyna/SpringEmailService/edit/master/CONTRIBUTING.md)
+- To see more information follow link: [CONTRIBUTING.md](https://github.com/Maslyna/SpringEmailService/blob/master/CONTRIBUTING.md)
 
 ###### Author:
 - [@Maslyna](https://github.com/Maslyna)
